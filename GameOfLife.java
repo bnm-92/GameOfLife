@@ -22,10 +22,35 @@ public class GameOfLife {
  		try{
  			String currentLine;
  			br = new BufferedReader(new FileReader(this.seedFile));
-
+ 			int i = 0;
+ 			int j = 0;
  			while((currentLine = br.readLine()) != null) {
- 				System.out.println(currentLine);
+ 				for (char s : currentLine.toCharArray()) {
+ 					// System.out.println(s);
+ 					if (s != '\n') {
+ 					Cell cell;
+ 					if (s == '.') {
+ 						cell = new Cell(false);
+ 					} else {
+ 						cell = new Cell(true);
+ 					}
+ 					gridOfLife[i][j] = cell;
+ 					j++;
+ 				}}
+ 				i++;
+ 				j = 0;
+ 				// System.out.println(currentLine);
  			}
+ 			// System.out.println();
+ 			// System.out.println();
+ 			// //checing read
+ 			// for (int k=0; k<sizeOfGrid; k++) {
+ 			// 	for(int l=0; l<sizeOfGrid; l++) {
+ 			// 		gridOfLife[k][l].printCell();
+ 			// 	}
+ 			// 	System.out.println();
+ 			// }
+
  		}catch(Exception e) {
  			e.printStackTrace();
  		} finally{
@@ -37,6 +62,15 @@ public class GameOfLife {
  				e.printStackTrace();
  			}
  		} 
+	}
+
+	public void print() {
+		for (int i=0; i<sizeOfGrid; i++) {
+			for (int j=0; j<sizeOfGrid; j++) {
+				gridOfLife[i][j].printCell();
+			}
+			System.out.println();
+		}
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -55,5 +89,6 @@ public class GameOfLife {
 
 		GameOfLife gol = new GameOfLife(n,g,file);
 		gol.seed();
+		gol.print();
 	}
 }

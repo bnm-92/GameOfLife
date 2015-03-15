@@ -17,4 +17,12 @@ public class Cell {
 	public synchronized int checkIteration() {
 		return iteration;
 	}
+
+	public void printCell() {
+		if (alive) {
+			System.out.print("x");
+		} else{
+			System.out.print(".");
+		}
+	}
 }

@@ -4,19 +4,21 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class GameOfLife {
-	Integer sizeOfGrid;
-	Integer iteration;
+	public static Integer sizeOfGrid;
+	public static Integer iteration;
 	String seedFile;
 	String path = "C:\\Users\\babar naveed\\Desktop\\ap_git\\15100142\\midTerm\\";
-	Cell[][] gridOfLife;
-	Cell[][] updateLife;
+	public static CellM[][] gridOfLife;
+	public static CellM[][] updateLife;
+
+	public static int abc = 0;
 
 	public GameOfLife(Integer sizeOfGrid, Integer iteration, String seedFile) {
 		this.sizeOfGrid = sizeOfGrid;
 		this.iteration = iteration;
 		this.seedFile = path + seedFile;
-		gridOfLife = new Cell[sizeOfGrid][sizeOfGrid];
-		updateLife = new Cell[sizeOfGrid][sizeOfGrid];
+		gridOfLife = new CellM[sizeOfGrid][sizeOfGrid];
+		updateLife = new CellM[sizeOfGrid][sizeOfGrid];
 	}
 
 	public void seed() {
@@ -30,11 +32,11 @@ public class GameOfLife {
  				for (char s : currentLine.toCharArray()) {
  					// System.out.println(s);
  					if (s != '\n') {
- 					Cell cell;
+ 					CellM cell;
  					if (s == '.') {
- 						cell = new Cell(false);
+ 						cell = new CellM(false);
  					} else {
- 						cell = new Cell(true);
+ 						cell = new CellM(true);
  					}
  					gridOfLife[i][j] = cell;
 
@@ -55,11 +57,12 @@ public class GameOfLife {
  			// }
  			for (int a=0; a<sizeOfGrid; a++) {
  				for (int b=0; b<sizeOfGrid; b++) {
- 					Cell cell = new Cell(true);
+ 					CellM cell = new CellM(true);
  					updateLife[a][b] = cell;
  				}
  			}
  		copyGridOfLife();
+ 		System.out.println("seed comeplete");
  		}catch(Exception e) {
  			e.printStackTrace();
  		} finally{
@@ -73,7 +76,7 @@ public class GameOfLife {
  		} 
 	}
 
-	public void print() {
+	public static void print() {
 		for (int i=0; i<sizeOfGrid; i++) {
 			for (int j=0; j<sizeOfGrid; j++) {
 				gridOfLife[i][j].printCell();
@@ -108,7 +111,7 @@ public class GameOfLife {
 		}
 	}
 
-	public int calculateNeighbours(int row, int col) throws Exception {
+	public static synchronized int calculateNeighbours(int row, int col) throws Exception {
 		// System.out.println("in calculate");
 		if(row >= sizeOfGrid || col >= sizeOfGrid || row < 0 || col < 0) {
 			throw new Exception("out of bounds");
@@ -155,6 +158,31 @@ public class GameOfLife {
 		print();
 	}
 
+	public static synchronized boolean checkFinish() {
+		print();
+		if (abc> 100) {
+			return true;
+		}
+		abc++;
+		// int count = 0;
+		// for (int i=0; i<sizeOfGrid; i++) {
+		// 	for (int j=0; j<sizeOfGrid; j++) {
+		// 		// System.out.println(iteration + "this is iteration");
+		// 		// System.out.println(gridOfLife[i][j].checkIteration() + "this is check");
+		// 		if (iteration == gridOfLife[i][j].checkIteration()+1) {
+		// 			count = count + gridOfLife[i][j].checkIteration()+1;
+		// 			System.out.println(count + "\n");
+		// 		}
+		// 	}
+		// }
+		// // System.out.println("total count" + count);
+		// int total = sizeOfGrid*sizeOfGrid*(iteration - 1);
+		// if (count>=total) {
+		// 	return true;
+		// }
+		return false;
+	}
+
 	public static void main(String[] args) throws Exception {
 		if (args.length <  2) {
 			throw new Exception("too few arguments");
@@ -171,9 +199,33 @@ public class GameOfLife {
 
 		GameOfLife gol = new GameOfLife(n,g,file);
 		gol.seed();
+		// gol.print();
+		// gol.runIterations();
+		updateCell[] t1 = new updateCell[n*n];
+		int k = 0;
+		for (int i=0; i<n; i++) {
+			for (int j=0; j<n; j++) {
+				t1[k] = new updateCell(k,i,j,g);
+				k++;
+			} 
+		}
+
+		for (int p = 0; p<k; p++) {
+			t1[p].start();
+		}
+
+		for (int p = 0; p<k; p++) {
+			t1[p].join();
+		}
+		// updateCell t1 = new updateCell(n);
+		// updateCell t2 = new updateCell(n);
+
+		// t1.start();
+		// t2.start();
+		
+		// t1.join();
+		// t2.join();
+
 		gol.print();
-		gol.runIterations();
-		
-		
 	}
 }

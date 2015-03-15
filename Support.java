@@ -8,7 +8,7 @@ public class Support {
 	}
 
 	public synchronized void cell_update(int i, int j) throws Exception {
-		
+		this.notifyAll();
 		while(!checkCellNeighbour(i, j)) {
 			this.notifyAll();	
 			// yield();

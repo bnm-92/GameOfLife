@@ -9,13 +9,17 @@ public class Cell {
 		alive = status;
 	}
 
-	public synchronized void update(boolean update) {
+	public void update(boolean update) {
 		alive = update;
 		iteration++;
 	}
 
-	public synchronized int checkIteration() {
+	public int checkIteration() {
 		return iteration;
+	}
+
+	public boolean checkStatus() {
+		return alive;
 	}
 
 	public void printCell() {

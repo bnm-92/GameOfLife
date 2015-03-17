@@ -60,6 +60,19 @@ public class Cell {
 		return updated;
 	}
 
+	public void update(boolean update) {
+		alive = update;
+		level++;
+	}
+
+	public int checkIteration() {
+		return level;
+	}
+
+	public boolean checkStatus() {
+		return alive;
+	}
+
 	public synchronized void printCell() {
 		if (alive) {
 			System.out.print("x");

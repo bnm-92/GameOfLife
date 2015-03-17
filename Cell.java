@@ -5,9 +5,10 @@ public class Cell {
 	boolean alive;
 	boolean calculatedValue;
 	boolean calculated;
+	boolean updated;
 
 	int level;
-	Lock lock = new ReentrantLock();
+	public ReentrantLock lock = new ReentrantLock();
 
 
 	public Cell(boolean status) {
@@ -15,10 +16,17 @@ public class Cell {
 		alive = status;
 	}
 
+	public int getLevel() {
+		return this.level;
+	}
+
+	public boolean getStatus() {
+		return alive;
+	}
+
 	public void update(boolean update) {
 		alive = update;
 		this.level++;
-		this.calculated = false;
 	}
 
 	public void calculate(boolean newValue) {
@@ -26,12 +34,24 @@ public class Cell {
 		this.calculatedValue = newValue;
 	}
 
-	public int checkLevel() {
-		return this.level;
+	public boolean getCalculated() {
+		return calculated;
 	}
 
-	public boolean checkStatus() {
-		return alive;
+	public boolean getCalculatedValue() {
+		return calculatedValue;
+	}
+
+	public void resetCalculated() {
+		this.calculated = false;
+	}
+
+	public void updatedValue(boolean input) {
+		updated = input;
+	}
+
+	public boolean getUpdated() {
+		return updated;
 	}
 
 	public void printCell() {

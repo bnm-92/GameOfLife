@@ -57,9 +57,9 @@ public class GameOfLife {
  		} 
 	}
 
-	public static void print() {
-		for (int i=0; i<sizeOfGrid; i++) {
-			for (int j=0; j<sizeOfGrid; j++) {
+	public void print() {
+		for (int i=0; i<this.sizeOfGrid; i++) {
+			for (int j=0; j<this.sizeOfGrid; j++) {
 				gridOfLife[i][j].printCell();
 			}
 			System.out.println();
@@ -70,16 +70,20 @@ public class GameOfLife {
 
 	public Cell[] getNeighbours(int row, int col) {
 		ArrayList<Cell> cells = new ArrayList<Cell>();
+		// int count = 1;
 		for (int i = row-1; i<= row+1; i++) {
-			for (int j=0; j<= col+1; j++) {
-				if (i>=0 || j>=0 || i< sizeOfGrid || j< sizeOfGrid) {
-					if (i != row && j != col) {
+			for (int j=col-1; j<= col+1; j++) {
+				// System.out.println(count);
+				if (i>=0 && j>=0 && i< sizeOfGrid && j< sizeOfGrid) {
+					if (i != row || j != col) {
+						// System.out.println(i+" "+j);
 						cells.add(gridOfLife[i][j]);
 					}
 				}
+				// count++;
 			}
 		}
-		cells.toArray();
+		return cells.toArray(new Cell[cells.size()]);
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -96,13 +100,16 @@ public class GameOfLife {
 		// // System.out.println(g);
 		// // System.out.println(s);
 
-		GameOfLife gol = new GameOfLife(n,g,file);
+		GameOfLife gol = new GameOfLife(n,iterations,file);
 		gol.seed();
 		gol.print();
 		// // gol.runIterations();
 
 		updateCell[] t1 = new updateCell[n*n];
-		k = 0;
+		int k = 0;
+
+		// System.out.println(gol.getNeighbours(0,0).length);
+
 		for (int i=0; i<n; i++) {
 			for (int j=0; j<n; j++) {
 				t1[k] = new updateCell(gol.gridOfLife[i][j], gol.getNeighbours(i,j), iterations);

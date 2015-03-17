@@ -16,10 +16,14 @@ public class updateCell extends Thread {
 	}
 
 	public void run() {
+		// System.out.println(this.getName() + " starting thread");
 		try {
 			int itrs = 0;
 			while(itrs < this.iterations) {
-				itrs = runIteration(itrs);
+				runIteration();
+				// runIteration(itrs);
+				// runIteration(itrs);
+				itrs++;
 			}	
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -27,9 +31,12 @@ public class updateCell extends Thread {
 		
 	}
 
-	public int runIteration(int count) throws Exception {
+	public void runIteration() throws Exception {
 		int op = 0;
+		
 		while(op < 3) {
+			// cell.setUpdated(false);// this.sleep(2000);
+			// cell.setLevel();
 			if ( op == 0) {
 				if(checkNeighbours()){
 					op++;						
@@ -45,71 +52,79 @@ public class updateCell extends Thread {
 			if ( op == 2) {
 				if (reset()) {
 					op++;
+					// count++;
 				}
 			}
 		}
-		return (count++);
 	}
 
 	public boolean checkNeighbours() throws Exception {
-		cell.lock.lock();
+		// cell.lock.lock();
 		int curLevel = cell.getLevel();
-		this.myState = cell.getStatus();
-		cell.lock.unlock();
+		// cell.lock.unlock();
 		int count = 0;
-		this.aliveNeighbours = 0;
 		for (Cell n : neighbours) {
-			n.lock.lock();
+			// n.lock.lock();
 			if (n.getLevel() == curLevel) {
 				count++;
 			}
-			if (n.getStatus()) {
-				this.aliveNeighbours++;
-			}
-
-			n.lock.unlock();
+			// n.lock.unlock();
 		}
 
 		if (count == neighbours.length) {
 			this.calculateSelf();
+			cell.setCalculated(true);
 			return true;
 		}
 		return false;
 	}
 
 	public void calculateSelf() throws Exception {
-		cell.lock.lock();
+		// cell.lock.lock();
+		cell.setUpdated(false);
+		this.myState = cell.getStatus();
+		this.aliveNeighbours = 0;
+		// int count = 0;
+		for (Cell n : neighbours) {
+			// n.lock.lock();
+			if (n.getStatus()) {
+				this.aliveNeighbours++;
+			}
+
+			// n.lock.unlock();
+		}		
 		int neighbours = this.aliveNeighbours;
 		if (neighbours < 2) {
-			cell.calculate(false);
+			cell.setCalculatedValue(false);
 		} else if (neighbours > 3) {
-			cell.calculate(false);
+			cell.setCalculatedValue(false);
 		} else if (neighbours == 3) {
-			cell.calculate(true);
+			cell.setCalculatedValue(true);
 		} else if (neighbours >=2 && neighbours <= 3 && myState) {
-			cell.calculate(true);
+			cell.setCalculatedValue(true);
 		} else {
-			cell.calculate(false);
+			cell.setCalculatedValue(false);
 		}
-		cell.updatedValue(false);
-		cell.lock.unlock();
+		// cell.lock.unlock();
 	}
 
 	public boolean updateSelf() {
+		// cell.resetUpdated();
+		// asdasfadsd
 		int count = 0;
 		for (Cell n : neighbours) {
-			n.lock.lock();
+			// n.lock.lock();
 			if (n.getCalculated()) {
 				count++;
 			}
-			n.lock.unlock();
+			// n.lock.unlock();
 		}
 
 		if (count == neighbours.length) {
-			cell.lock.lock();
-			cell.update(cell.getCalculatedValue());
-			cell.updatedValue(true);
-			cell.lock.unlock();
+			// cell.lock.lock();
+			cell.setStatus(cell.getCalculatedValue());
+			cell.setUpdated(true);
+			// cell.lock.unlock();
 			return true;
 		}
 
@@ -119,17 +134,20 @@ public class updateCell extends Thread {
 	public boolean reset() {
 		int count = 0;
 		for (Cell n : neighbours) {
-			n.lock.lock();
+			// n.lock.lock();
 			if(n.getUpdated()) {
 				count++;
 			}
-			n.lock.unlock();
+			// n.lock.unlock();
 		}
 
 		if (count == neighbours.length) {
-			cell.lock.lock();
-			cell.resetCalculated();
-			cell.lock.unlock();
+			cell.setCalculated(false);
+			cell.setLevel();
+			// cell.lock.lock();
+			// cell.resetCalculated();
+			// cell.resetUpdated();
+			// cell.lock.unlock();
 			return true;
 		}
 		return false;

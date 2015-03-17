@@ -8,53 +8,59 @@ public class Cell {
 	boolean updated;
 
 	int level;
-	public ReentrantLock lock = new ReentrantLock();
+	// public ReentrantLock lock = new ReentrantLock();
 
 
 	public Cell(boolean status) {
 		this.level = 0;
 		alive = status;
+		calculated = false;
+		updated = false;
+		calculatedValue = false;
 	}
 
-	public int getLevel() {
+	public synchronized int getLevel() {
 		return this.level;
 	}
 
-	public boolean getStatus() {
-		return alive;
-	}
-
-	public void update(boolean update) {
-		alive = update;
+	public synchronized void setLevel() {
 		this.level++;
 	}
 
-	public void calculate(boolean newValue) {
-		this.calculated = true;
-		this.calculatedValue = newValue;
+	public synchronized boolean getStatus() {
+		return alive;
 	}
 
-	public boolean getCalculated() {
-		return calculated;
+	public synchronized void setStatus(boolean input) {
+		alive = input;
 	}
 
-	public boolean getCalculatedValue() {
+	public synchronized void setCalculatedValue(boolean input) {
+		// this.calculated = true;
+		this.calculatedValue = input;
+	}
+
+	public synchronized boolean getCalculatedValue() {
 		return calculatedValue;
 	}
 
-	public void resetCalculated() {
-		this.calculated = false;
+	public synchronized void setCalculated(boolean input) {
+		calculated = input;
 	}
 
-	public void updatedValue(boolean input) {
+	public synchronized boolean getCalculated() {
+		return calculated;
+	}
+
+	public synchronized void setUpdated(boolean input) {
 		updated = input;
 	}
 
-	public boolean getUpdated() {
+	public synchronized boolean getUpdated() {
 		return updated;
 	}
 
-	public void printCell() {
+	public synchronized void printCell() {
 		if (alive) {
 			System.out.print("x");
 		} else{

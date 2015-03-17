@@ -5,11 +5,11 @@ import java.io.IOException;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class GameOfLife {
-	public Integer sizeOfGrid;
-	public Integer iteration;
+	Integer sizeOfGrid;
+	Integer iteration;
 	String seedFile;
 	String path = "C:\\Users\\babar naveed\\Desktop\\ap_git\\15100142\\midTerm\\";
-	public CellM[][] gridOfLife;
+	public Cell[][] gridOfLife;
 
 	public static int abc = 0;
 
@@ -17,7 +17,7 @@ public class GameOfLife {
 		this.sizeOfGrid = sizeOfGrid;
 		this.iteration = iteration;
 		this.seedFile = path + seedFile;
-		gridOfLife = new CellM[sizeOfGrid][sizeOfGrid];
+		gridOfLife = new Cell[sizeOfGrid][sizeOfGrid];
 	}
 
 	public void seed() {
@@ -29,13 +29,12 @@ public class GameOfLife {
  			int j = 0;
  			while((currentLine = br.readLine()) != null) {
  				for (char s : currentLine.toCharArray()) {
- 					// System.out.println(s);
  					if (s != '\n') {
- 					CellM cell;
+ 					Cell cell;
  					if (s == '.') {
- 						cell = new CellM(false);
+ 						cell = new Cell(false);
  					} else {
- 						cell = new CellM(true);
+ 						cell = new Cell(true);
  					}
  					gridOfLife[i][j] = cell;
 
@@ -45,14 +44,6 @@ public class GameOfLife {
  				j = 0;
  				// System.out.println(currentLine);
  			}
-
- 			for (int a=0; a<sizeOfGrid; a++) {
- 				for (int b=0; b<sizeOfGrid; b++) {
- 					CellM cell = new CellM(true);
- 					updateLife[a][b] = cell;
- 				}
- 			}
-
  		}catch(Exception e) {
  			e.printStackTrace();
  		} finally{
@@ -77,49 +68,56 @@ public class GameOfLife {
 		System.out.println();
 	}
 
+	public Cell[] getNeighbours(int row, int col) {
+		ArrayList<Cell> cells = new ArrayList<Cell>();
+		for (int i = row-1; i<= row+1; i++) {
+			for (int j=0; j<= col+1; j++) {
+				if (i>=0 || j>=0 || i< sizeOfGrid || j< sizeOfGrid) {
+					if (i != row && j != col) {
+						cells.add(gridOfLife[i][j]);
+					}
+				}
+			}
+		}
+		cells.toArray();
+	}
+
 	public static void main(String[] args) throws Exception {
 		if (args.length <  2) {
 			throw new Exception("too few arguments");
 		}
 
 		// input format is N G S
-		// Integer n = Integer.parseInt(args[0]);
-		// Integer g = Integer.parseInt(args[1]);
-		// String file = args[2];
+		Integer n = Integer.parseInt(args[0]);
+		Integer iterations = Integer.parseInt(args[1]);
+		String file = args[2];
 
 		// // System.out.println(n);
 		// // System.out.println(g);
 		// // System.out.println(s);
 
-		// GameOfLife gol = new GameOfLife(n,g,file);
-		// gol.seed();
-		// // gol.print();
+		GameOfLife gol = new GameOfLife(n,g,file);
+		gol.seed();
+		gol.print();
 		// // gol.runIterations();
-		// updateCell[] t1 = new updateCell[n*n];
-		// int k = 0;
-		// for (int i=0; i<n; i++) {
-		// 	for (int j=0; j<n; j++) {
-		// 		t1[k] = new updateCell(k,i,j,g);
-		// 		k++;
-		// 	} 
-		// }
 
-		// for (int p = 0; p<k; p++) {
-		// 	t1[p].start();
-		// }
+		updateCell[] t1 = new updateCell[n*n];
+		k = 0;
+		for (int i=0; i<n; i++) {
+			for (int j=0; j<n; j++) {
+				t1[k] = new updateCell(gol.gridOfLife[i][j], gol.getNeighbours(i,j), iterations);
+				k++;
+			} 
+		}
 
-		// for (int p = 0; p<k; p++) {
-		// 	t1[p].join();
-		// }
-		// // updateCell t1 = new updateCell(n);
-		// // updateCell t2 = new updateCell(n);
+		for (int p = 0; p<k; p++) {
+			t1[p].start();
+		}
 
-		// // t1.start();
-		// // t2.start();
-		
-		// // t1.join();
-		// // t2.join();
+		for (int p = 0; p<k; p++) {
+			t1[p].join();
+		}
 
-		// gol.print();
+		gol.print();
 	}
 }

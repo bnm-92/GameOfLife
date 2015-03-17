@@ -2,6 +2,27 @@ import java.util.*;
 
 public class updateCell extends Thread {
 
+	Cell cell;
+	Cell[] neighbours;
+	int iterations;
+
+	public updateCell(Cell cell, Cell[] neighbours, int iterations) {
+		this.cell = cell;
+		this.neighbours = neighbours;
+		this.iterations = iterations;
+	}
+
+	public void run() {
+		int itrs = 0;
+		while(itrs < iterations) {
+			runIteration();
+			itrs++;
+		}
+	}
+}
+
+public class updateCell extends Thread {
+
 	int size;
 	int i;
 	int j;

@@ -1,21 +1,33 @@
 import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Cell {
 	boolean alive;
-	int iteration;
+	boolean calculatedValue;
+	boolean calculated;
+
+	int level;
+	Lock lock = new ReentrantLock();
+
 
 	public Cell(boolean status) {
-		iteration = 0;
+		this.level = 0;
 		alive = status;
 	}
 
 	public void update(boolean update) {
 		alive = update;
-		iteration++;
+		this.level++;
+		this.calculated = false;
 	}
 
-	public int checkIteration() {
-		return iteration;
+	public void calculate(boolean newValue) {
+		this.calculated = true;
+		this.calculatedValue = newValue;
+	}
+
+	public int checkLevel() {
+		return this.level;
 	}
 
 	public boolean checkStatus() {
